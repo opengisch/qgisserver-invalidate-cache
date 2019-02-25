@@ -90,16 +90,17 @@ class InvalidateCacheFilter(QgsServerFilter):
             self.set_json_response('200', body)
             return
 
+        # REQUEST is now invalidatecache
         # Check if needed params are set
-        if 'MAP' not in params:
+        if 'map' not in params:
             body = {
                 'status': 'fail',
-                'message': 'Missing parameters: MAP is required '
+                'message': 'Missing parameters: map is required '
                 }
             self.set_json_response('200', body)
             return
 
-        self.project_path = params['MAP']
+        self.project_path = params['map']
 
         QgsConfigCache.instance().removeEntry(self.project_path)
 

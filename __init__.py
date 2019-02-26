@@ -20,10 +20,6 @@
 
  This script initializes the plugin, making it known to QGIS and QGIS Server.
 """
-try:
-    from qgis.server import *
-except:
-    pass
 
 
 def serverClassFactory(serverIface):  # pylint: disable=invalid-name
@@ -33,5 +29,5 @@ def serverClassFactory(serverIface):  # pylint: disable=invalid-name
     :type iface: QgsServerInterface
     """
     #
-    from .invalidate_cache_server import InvalidateCacheServer
-    return InvalidateCacheServer(serverIface)
+    from .invalidate_cache_service import InvalidateCacheService
+    return InvalidateCacheService(serverIface)

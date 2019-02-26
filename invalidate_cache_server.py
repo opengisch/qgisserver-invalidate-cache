@@ -37,7 +37,7 @@ class InvalidateCacheServer:
                                  'plugin',
                                  QgsMessageLog.INFO)
 
-        from .filters.invalidate_cache_filter import InvalidateCacheFilter
+        from .invalidate_cache_filter import InvalidateCacheFilter
         try:
             serverIface.registerFilter(InvalidateCacheFilter(serverIface), 50)
         except Exception as e:

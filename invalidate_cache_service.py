@@ -19,13 +19,13 @@ class InvalidateCacheServiceService(QgsService):
     def executeRequest(self, request, response, project):
 
         QgsMessageLog.logMessage('INVALIDATECACHE service executeRequest',
-                                 level=Qgis.Info)
+                                 'Server', Qgis.Info)
         map = request.parameters()['MAP']
         QgsConfigCache.instance().removeEntry(map)
         msg = "Cache cleared for %s" % (map)
-        QgsMessageLog.logMessage(msg, level=Qgis.Info)
+        QgsMessageLog.logMessage(msg,'Server', Qgis.Info)
         response.setStatusCode(200)
-        response.write(msg)
+        response.write('success - cache cleared')
 
 
 class InvalidateCacheService():

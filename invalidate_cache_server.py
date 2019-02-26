@@ -23,7 +23,7 @@ __author__ = 'Marco Bernasocchi'
 __date__ = 'February 2019'
 __copyright__ = '(C) 2019, Marco Bernasocchi - OPENGIS.ch'
 
-from qgis.core import QgsMessageLog, QgsLogger
+from qgis.core import QgsMessageLog, QgsLogger, Qgis
 
 
 class InvalidateCacheServer:
@@ -33,9 +33,8 @@ class InvalidateCacheServer:
     def __init__(self, serverIface):
         # Save reference to the QGIS server interface
         self.serverIface = serverIface
-        QgsMessageLog.logMessage("SUCCESS - invalidatecache init",
-                                 'plugin',
-                                 QgsMessageLog.INFO)
+        QgsMessageLog.logMessage("SUCCESS - invalidatecache init plugin",
+                                 Qgis.Info)
 
         from .invalidate_cache_filter import InvalidateCacheFilter
         try:

@@ -32,4 +32,3 @@ class InvalidateCacheService():
         self.serv = InvalidateCacheServiceService()
         serverIface.serviceRegistry().registerService(
             InvalidateCacheServiceService())
-

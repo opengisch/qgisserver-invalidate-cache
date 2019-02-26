@@ -1,9 +1,7 @@
 
-from qgis.PyQt.QtCore import QBuffer, QIODevice, QTextStream
-from qgis._server import QgsConfigCache
-from qgis.server import (QgsServiceRegistry,
-                         QgsService, QgsServerFilter)
+from qgis.server import (QgsConfigCache, QgsService)
 from qgis.core import QgsMessageLog
+
 
 class InvalidateCacheServiceService(QgsService):
 
@@ -21,7 +19,7 @@ class InvalidateCacheServiceService(QgsService):
 
     def executeRequest(self, request, response, project):
         QgsMessageLog.logMessage('Custom service executeRequest')
-        # QgsConfigCache.instance().removeEntry(project.absoluteFilePath())
+        QgsConfigCache.instance().removeEntry(project.absoluteFilePath())
         response.setStatusCode(200)
         response.write("Cache cleared for %s" % (project.absoluteFilePath()))
 

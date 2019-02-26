@@ -29,5 +29,8 @@ def serverClassFactory(serverIface):  # pylint: disable=invalid-name
     :type iface: QgsServerInterface
     """
     #
+    from .invalidate_cache_filter import InvalidateCacheFilter
     from .invalidate_cache_service import InvalidateCacheService
-    return InvalidateCacheService(serverIface)
+    filter = InvalidateCacheFilter(serverIface)
+    service = InvalidateCacheService(serverIface)
+    return service

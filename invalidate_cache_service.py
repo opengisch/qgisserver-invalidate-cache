@@ -1,6 +1,5 @@
-
 from qgis.server import (QgsConfigCache, QgsService)
-from qgis.core import QgsMessageLog
+from qgis.core import QgsMessageLog, Qgis
 
 
 class InvalidateCacheServiceService(QgsService):
@@ -18,10 +17,15 @@ class InvalidateCacheServiceService(QgsService):
         return True
 
     def executeRequest(self, request, response, project):
-        QgsMessageLog.logMessage('Custom service executeRequest')
-        QgsConfigCache.instance().removeEntry(project.absoluteFilePath())
+
+        QgsMessageLog.logMessage('INVALIDATECACHE service executeRequest',
+                                 level=Qgis.Info)
+        map = request.parameters()['MAP']
+        QgsConfigCache.instance().removeEntry(map)
+        msg = "Cache cleared for %s" % (map)
+        QgsMessageLog.logMessage(msg, level=Qgis.Info)
         response.setStatusCode(200)
-        response.write("Cache cleared for %s" % (project.absoluteFilePath()))
+        response.write(msg)
 
 
 class InvalidateCacheService():

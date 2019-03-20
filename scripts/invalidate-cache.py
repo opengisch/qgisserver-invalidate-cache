@@ -8,9 +8,11 @@ INTERVAL = 60  # sec - min 60
 
 # URL of the INVALIDATECACHE service the port is the docker *internal* one
 SERVERS = [
-    "http://localhost:80/local/",
+    "localhost:9991",
+    "localhost:9992",
+    "localhost:9993",
+    "localhost:9994",
 ]
-URLPARAMS = {"service": "INVALIDATECACHE", "map": None}
 
 # file where the status is stored
 PICKLE_FILE = "touched.pkl"
@@ -23,7 +25,7 @@ PICKLE_FILE = "touched.pkl"
 import glob
 import os
 import pickle
-import requests
+import subprocess
 import sys
 from datetime import datetime
 from time import time
@@ -34,11 +36,11 @@ interval = INTERVAL * 1.5
 
 
 def invalidate_cache_by_url(filepath, now):
-    URLPARAMS["map"] = filepath
     responses = []
     for server in SERVERS:
-        response = requests.get(server, URLPARAMS)
-        responses.append("%s - %s " % (response, response.text))
+        command = "QUERY_STRING='MAP=%s&service=INVALIDATECACHE' cgi-fcgi -bind -connect %s" % (filepath, server)
+        retcode = subprocess.call(command, shell=True)
+        responses.append({"server": server, "returncode": retcode})
     
     print("invalidated cache for %s %s: %s" % (filepath, datetime.fromtimestamp(now).isoformat(), responses))
 
@@ -104,4 +106,3 @@ if __name__ == "__main__":
         invalidate_cache(sys.argv[1], time())
     except IndexError:
         scan()
-

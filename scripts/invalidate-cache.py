@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
 
 # QGIS project dir
-DIR = "/geodata/qgis_projects/"
+DIRS = ["/geodata/qgis_projects/",
+        "/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/"]
 
 # this must be the same as the interval of the cron executing the script
 INTERVAL = 60  # sec - min 60
@@ -42,7 +43,8 @@ def invalidate_cache_by_url(filepath, now):
         retcode = subprocess.call(command, shell=True)
         responses.append({"server": server, "returncode": retcode})
     
-    print("invalidated cache for %s %s: %s" % (filepath, datetime.fromtimestamp(now).isoformat(), responses))
+    print("invalidated cache for %s %s: %s" % (
+        filepath, datetime.fromtimestamp(now).isoformat(), responses))
 
     return responses
 
@@ -67,9 +69,16 @@ def invalidate_cache(filepath, now):
 
 
 def scan():
-    for filepath in glob.iglob(DIR + "/**", recursive=True):
+    for directory in DIRS:
+        scan_dir(directory)
+
+
+def scan_dir(directory):
+    for filepath in glob.iglob(directory + "/**", recursive=True):
         if os.path.isfile(filepath) and (
-            filepath.endswith(".qgs") or filepath.endswith(".qgz")
+            filepath.endswith(".qgs") 
+            or filepath.endswith(".qgz") 
+            or filepath.endswith(".svg") 
         ):
             now = time()
             modif_time = os.path.getmtime(filepath)
@@ -101,7 +110,7 @@ if __name__ == "__main__":
             TOUCHED = pickle.load(f)
     except FileNotFoundError:
         TOUCHED = {}
-    try: 
+    try:
         print ("Invalidating single file cache: %s - %s " % (sys.argv[1], time()))
         invalidate_cache(sys.argv[1], time())
     except IndexError:
